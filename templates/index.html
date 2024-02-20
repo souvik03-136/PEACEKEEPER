@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Summarizer</title>
+    <!-- Include Socket.IO library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>PDF Summarizer</h1>
+    <form id="upload-form">
+        <input type="file" id="file" accept=".pdf" required>
+        <button type="button" id="summarize-btn">Summarize</button>
+    </form>
+
+    <!-- Display the summary in the console -->
+    <div id="summary"></div>
+
+    <script>
+        $(document).ready(function() {
+            var socket = io(); // Connect to the Socket.IO server
+            console.log("Socket connected successfully!");
+
+            $('#summarize-btn').click(function() {
+                var fileInput = document.getElementById('file');
+                var file = fileInput.files[0];
+
+                // Emit the file to the backend for processing
+                console.log("Emitting file to backend...");
+                socket.emit('process_file', { filename: file.name, file: file });
+            });
+
+            // Listen for the summary text from the backend and display it
+            socket.on('summary_text', function(data) {
+                console.log("Summary text:", data.text);
+                $('#summary').text(data.text); // Display the summary text
+            });
+        });
+    </script>
+</body>
+</html>
