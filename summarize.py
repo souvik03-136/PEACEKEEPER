@@ -29,7 +29,7 @@ def summarize_pdf(pdf_path):
                 # Delete the image file after processing
                 os.remove(image_path)
 
-    genai.configure(api_key="AIzaSyCA_GcqeNw4J8VdduzqzqWgVd4sTMo6NyI")
+    genai.configure(api_key="YOUR_API_KEY")
     model = genai.GenerativeModel("gemini-pro")
     response = model.generate_content(f"{text} Generate a comprehensive summary of the legal document provided. Extract key details such as the parties involved, background information, legal arguments presented, and the court's decision. Highlight any jurisdictional issues, interpretation of legal clauses, and recommendations made by the court. Please provide a concise overview that captures the essential aspects of the document.")
 
