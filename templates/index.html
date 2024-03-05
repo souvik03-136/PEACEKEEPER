@@ -1,44 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Summarizer</title>
-    <!-- Include Socket.IO library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
-    <!-- Include jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>PDF Summarizer</h1>
-    <form id="upload-form">
-        <input type="file" id="file" accept=".pdf" required>
-        <button type="button" id="summarize-btn">Summarize</button>
-    </form>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>PDF Summarizer</title>
+		<!-- Include Socket.IO library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+		<!-- Include jQuery library -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	</head>
+	<body>
+		<h1>PDF Summarizer</h1>
+		<form id="upload-form">
+			<input type="file" id="file" accept=".pdf" required />
+			<button type="button" id="summarize-btn">Summarize</button>
+		</form>
 
-    <!-- Display the summary in the console -->
-    <div id="summary"></div>
+		<!-- Display the summary in the console -->
+		<div id="summary"></div>
 
-    <script>
-        $(document).ready(function() {
-            var socket = io(); // Connect to the Socket.IO server
-            console.log("Socket connected successfully!");
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				var socket = io(); // Connect to the Socket.IO server
+				socket.on("connect", function () {
+					console.log("Socket Connected Successfully...");
+				});
 
-            $('#summarize-btn').click(function() {
-                var fileInput = document.getElementById('file');
-                var file = fileInput.files[0];
+				document
+					.getElementById("summarize-btn")
+					.addEventListener("click", function () {
+						var fileInput = document.getElementById("file");
+						if (fileInput.files.length === 0) {
+							alert("Please select a file");
+							return;
+						}
+						var file = fileInput.files[0];
+						var formData = new FormData();
+						formData.append("file", file);
+						fetch("/upload", {
+							method: "POST",
+							body: formData,
+						}).then(function (response) {
+							if (response.ok) {
+								console.log("File uploaded successfully");
+							} else {
+								console.error("File upload failed");
+							}
+						});
+					});
 
-                // Emit the file to the backend for processing
-                console.log("Emitting file to backend...");
-                socket.emit('process_file', { filename: file.name, file: file });
-            });
-
-            // Listen for the summary text from the backend and display it
-            socket.on('summary_text', function(data) {
-                console.log("Summary text:", data.text);
-                $('#summary').text(data.text); // Display the summary text
-            });
-        });
-    </script>
-</body>
+				// Listen for the summary text from the backend and display it
+				socket.on("summary_text", function (data) {
+					console.log("Summary text:", data.text);
+					document.getElementById("summary").textContent = data.text; // Display the summary text
+				});
+			});
+		</script>
+	</body>
 </html>
