@@ -4,7 +4,7 @@ import os
 import pytesseract
 import fitz
 
-def summarize_pdf(pdf_path):
+def summarize_pdf(pdf_path,language):
     print("Summarize PDF function called")  # Add this print statement for debugging
 
     text = ''
@@ -29,10 +29,12 @@ def summarize_pdf(pdf_path):
                 # Delete the image file after processing
                 os.remove(image_path)
 
-    genai.configure(api_key="YOUR_API_KEY")
+    genai.configure(api_key="API_KEY")
     model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content(f"{text} Generate a comprehensive summary of the legal document provided. Extract key details such as the parties involved, background information, legal arguments presented, and the court's decision. Highlight any jurisdictional issues, interpretation of legal clauses, and recommendations made by the court. Please provide a concise overview that captures the essential aspects of the document.")
+    response = model.generate_content(f"{text} Generate a comprehensive summary of the legal document provided in {language}. Extract key details such as the parties involved, background information, legal arguments presented, and the court's decision. Highlight any jurisdictional issues, interpretation of legal clauses, and recommendations made by the court. Please provide a concise overview that captures the essential aspects of the document.")
 
     summary_text = response.text
     print("Summary text:", summary_text)  # Print the summary text for debugging
     return summary_text
+
+

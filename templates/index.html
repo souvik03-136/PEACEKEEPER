@@ -1,128 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PEACEKEEPER</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family: 'Poppins';
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        max-height: fit-content;
+        background-image: url('./court.jpg');
 
-        #container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-        }
+        background-size: cover;
+        background-position: center;
+      }
 
-        h1 {
-            color: #333;
-            text-align: center;
-        }
+      #container {
+        max-width: 400px;
+        min-width: none;
+        margin: 0 auto;
+        padding: 40px;
+        background-color: #0000007c;
+        backdrop-filter: blur(10px);
+        border: 4px solid white;
+        border-radius: 30px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        margin-top: 0px;
+      }
 
-        #upload-form {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      h1 {
+        color: white;
+        font-weight: 700;
+        text-align: center;
+      }
 
-        input[type="file"] {
-            display: none;
-        }
+      #upload-form {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
-        label {
-            display: block;
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 10px;
-        }
+      input[type='file'] {
+        display: none;
+      }
 
-        label:hover {
-            background-color: #45a049;
-        }
+      label {
+        display: block;
+        background-color: royalblue;
+        color: #fff;
+        border-radius: 40px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-bottom: 10px;
+        margin-top: 40px;
+      }
 
-        #summarize-btn {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+      label:hover {
+        background-color: blue;
+      }
 
-        .file-uploaded {
-            background-color: #28a745 !important;
-        }
+      #summarize-btn {
+        background-color: #007bff;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 10px 60px;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 40px;
+        margin-left: 10px;
+      }
 
-        #summarize-btn:hover {
-            background-color: #0056b3;
-        }
+      .file-uploaded {
+        background-color: #28a745 !important;
+      }
 
-        #summary {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
+      #summarize-btn:hover {
+        background-color: #0056b3;
+      }
+      #summary {
+        padding: 20px;
+
+        border-radius: 5px;
+      }
+      #language {
+        margin-top: 40px;
+        margin-right: 10px;
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border: 1px solid black;
+        border-radius: 20px;
+        max-width: 200px;
+        min-width: 150px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .buttondiv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #summary {
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="container">
-        <h1>PEACEKEEPER</h1>
-        <form id="upload-form">
-            <label for="file" id="file-label">Choose PDF File</label>
-            <input type="file" id="file" accept=".pdf" required />
-            <button type="button" id="summarize-btn">Summarize</button>
-        </form>
-        <div id="summary"></div>
+      <h1>PEACEKEEPER</h1>
+      <form id="upload-form">
+        <label for="file" id="file-label">Choose PDF File</label>
+        <input type="file" id="file" accept=".pdf" required />
+        <div class="buttondiv">
+          <select id="language" name="language">
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+            <option value="bengali">Bengali</option>
+            <option value="telugu">Telugu</option>
+            <option value="marathi">Marathi</option>
+            <option value="tamil">Tamil</option>
+            <option value="urdu">Urdu</option>
+            <option value="gujarati">Gujarati</option>
+            <option value="kannada">Kannada</option>
+            <option value="odia">Odia</option>
+            <option value="punjabi">Punjabi</option>
+            <option value="malayalam">Malayalam</option>
+            <option value="assamese">Assamese</option>
+            <option value="maithili">Maithili</option>
+            <option value="santali">Santali</option>
+            <option value="kashmiri">Kashmiri</option>
+
+          </select>
+          <button type="button" id="summarize-btn">Summarize</button>
+        </div>
+      </form>
+
+      <div id="summary"></div>
     </div>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         var socket = io();
-        socket.on("connect", function () {
-            console.log("Socket Connected Successfully...");
+        socket.on('connect', function () {
+          console.log('Socket Connected Successfully...');
         });
 
-        document.getElementById("summarize-btn").addEventListener("click", function () {
-            var fileInput = document.getElementById("file");
+        document
+          .getElementById('summarize-btn')
+          .addEventListener('click', function () {
+            var fileInput = document.getElementById('file');
             if (fileInput.files.length === 0) {
-                alert("Please select a file");
-                return;
+              alert('Please select a file');
+              return;
             }
             var file = fileInput.files[0];
             var formData = new FormData();
-            formData.append("file", file);
-            fetch("/upload", {
-                method: "POST",
-                body: formData,
-            }).then(function (response) {
-                if (response.ok) {
-                    console.log("File uploaded successfully");
-                    document.getElementById("file-label").classList.add("file-uploaded");
-                } else {
-                    console.error("File upload failed");
-                }
-            });
-        });
+            formData.append('file', file);
 
-        socket.on("summary_text", function (data) {
-            console.log("Summary text:", data.text);
-            document.getElementById("summary").textContent = data.text;
+            // Get selected language value
+            var selectedLanguage = document.getElementById('language').value;
+            formData.append('language', selectedLanguage);
+
+            fetch('/upload', {
+              method: 'POST',
+              body: formData,
+            }).then(function (response) {
+              if (response.ok) {
+                console.log('File uploaded successfully');
+                document
+                  .getElementById('file-label')
+                  .classList.add('file-uploaded');
+              } else {
+                console.error('File upload failed');
+              }
+            });
+          });
+
+        socket.on('summary_text', function (data) {
+          console.log('Summary text:', data.text);
+          document.getElementById('summary').textContent = data.text;
         });
-    });
+      });
     </script>
-</body>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+      const fileInput = document.getElementById('file');
+      const container = document.getElementById('container');
+
+      const fileLabel = document.getElementById('file-label');
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files.length === 1) {
+          fileLabel.innerText = 'File Uploaded Successfully.';
+          Toastify({
+            text: 'File uploaded successfully',
+            backgroundColor: 'green',
+          }).showToast();
+        } else {
+          Toastify({
+            text: 'File not uploaded',
+            backgroundColor: 'red',
+          }).showToast();
+        }
+      });
+    </script>
+  </body>
 </html>
